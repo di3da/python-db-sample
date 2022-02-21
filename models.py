@@ -14,8 +14,6 @@ class Book():
         self.genre = str(bookgenre)
         self.state = str(bookstate)
     
-
-
 class Reader():
     def __init__(self, idr, name, dob, gender, adress, phonenumber): 
         self.id = int(idr)
@@ -24,9 +22,7 @@ class Reader():
         self.gender = str(gender)
         self.adress = str(adress)
         self.phonenumber = str(phonenumber)
-         
     
-
 class LibraryRecord():
     def __init__(self, idx, reader, book, date_issued, date_due):
         self.id = idx
@@ -35,5 +31,6 @@ class LibraryRecord():
         self.date_issued = date_issued
         self.date_due = date_due
 
+        cerf
 
 
