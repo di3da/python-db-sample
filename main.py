@@ -32,12 +32,31 @@ def addbook():
     print("Введите состояние книги:")
     bookstate = input()
     a = Book(id, bookname, bookauthor, pubdate, bookgenre, bookstate)
+    
     return a
 
+def checkbook():
+    print("Введите номер билета читателя:")
+    id = input()
+#здесь нужно обратиться к хранилищу по полученному номеру читателя 
+    print(Book(bookname, bookgenre))
+
+def debtcheck():
+    pass
+
+
+
+
 def main():
-    fd = open("readers.txt", "w")
-    fd.write(str(register()))
-    fd.close()
+    print("Введите команду (addbook, register, debtcheck, checkbook):")
+    if input() == "addbook":
+        addbook()
+    elif input() == "register":
+        register()
+    elif input() == "checkbook":
+        checkbook()
+    elif input() == "debtcheck":
+        debtcheck()
 
 
 if __name__ == '__main__':
