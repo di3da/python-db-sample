@@ -1,10 +1,10 @@
-from models import Reader
-from models import Book
+import models
+import sqlite3
+
+models.CONNECTION = sqlite3.connect('library.db')
 
 
 def register():
-    print("Введите номер читателя в 4-значном формате:")
-    id = input()
     print("Введите ФИО читателя без сокращений:")
     fio = input()
     print("Введите дату рождения читателя в формате dd.mm.yyyy:")
@@ -15,12 +15,10 @@ def register():
     adress = input()
     print("Введите телефонный номер читателя:")
     phonenumber = input()
-    a = Reader(id, fio, dob, gender, adress, phonenumber)
+    a = models.Reader(fio, dob, gender, adress, phonenumber)
     return a
 
 def addbook():
-    print("Введите номер книги в 4-значном формате:")
-    id = input()
     print("Введите название книги:")
     bookname = input()
     print("Введите автора книги:")
@@ -31,13 +29,19 @@ def addbook():
     bookgenre = input()
     print("Введите состояние книги:")
     bookstate = input()
-    a = Book(id, bookname, bookauthor, pubdate, bookgenre, bookstate)
-    
-    return a
+    a = models.Book(
+        bookname, 
+        bookauthor, 
+        pubdate, 
+        bookgenre, 
+        bookstate)
+    a.save()
+    print("Книге присвоен номер ", a.id)
 
 def checkbook():
-    print("Введите номер билета читателя:")
-    id = input()
+    print("Введите условие, чтобы вывести все книги, к которым оно применимо:")
+    condition = input()
+    models.Book.select(condition)
 #здесь нужно обратиться к хранилищу по полученному номеру читателя 
 #    print(Book(bookname, bookgenre))
 
