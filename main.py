@@ -39,24 +39,27 @@ def checkbook():
     print("Введите номер билета читателя:")
     id = input()
 #здесь нужно обратиться к хранилищу по полученному номеру читателя 
-    print(Book(bookname, bookgenre))
+#    print(Book(bookname, bookgenre))
 
 def debtcheck():
+#обращаемся ко всем книгам в хранилище
+#условием выводим в список fio, dob и adress каждого владельца книги, у которой истек срок
     pass
-
-
 
 
 def main():
     print("Введите команду (addbook, register, debtcheck, checkbook):")
-    if input() == "addbook":
+    message = input()
+    if message == "addbook":
         addbook()
-    elif input() == "register":
+    elif message == "register":
         register()
-    elif input() == "checkbook":
+    elif message == "checkbook":
         checkbook()
-    elif input() == "debtcheck":
+    elif message == "debtcheck":
         debtcheck()
+    else:
+        main()
 
 
 if __name__ == '__main__':

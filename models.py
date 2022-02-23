@@ -31,5 +31,3 @@ class LibraryRecord():
         self.date_issued = date_issued
         self.date_due = date_due
 
-
-
