@@ -37,7 +37,7 @@ class Book():
     '''
 
     SQL_DELETE = '''
-    
+        DELETE * from books WHERE {};
     '''
 
     SQL_SELECT = '''
@@ -83,8 +83,11 @@ class Book():
         self.id = cursor.lastrowid
 
     def delete(self):
-        # удалить из базы
-        pass
+        cursor = CONNECTION.cursor()
+        cursor.execute(self.SQL_DELETE.format(
+            self.id
+        ))
+
 
     @staticmethod
     def select(condition):
@@ -107,13 +110,98 @@ class Book():
         # получить по условию
     
 class Reader():
-    def __init__(self, idr, name, dob, gender, adress, phonenumber): 
-        self.id = idr
+    SQL_CREATE = '''
+        CREATE TABLE readers (
+            id INTEGER PRIMARY KEY,
+            name TEXT NOT NULL,
+            dob DATE NOT NULL,
+            gender TEXT NOT NULL,
+            adress TEXT NOT NULL,
+            phonenumber TEXT NOT NULL
+        );
+    '''
+
+    SQL_INSERT = ''' 
+        INSERT INTO readers (
+            name,
+            dob,
+            gender,
+            adress,
+            phonenumber
+        )
+        VALUES(
+            "{}",
+            "{}",
+            "{}",
+            "{}",
+            "{}"
+        ) 
+    '''
+
+    SQL_SELECT = '''
+        SELECT * from readers WHERE {};
+    '''
+    SQL_DELETE = '''
+        DELETE * from readers WHERE {};
+    '''
+
+    def __init__(self, name, dob, gender, adress, phonenumber): 
+        self.id = None
         self.fio = name
         self.dob = dob
         self.gender = gender
         self.adress = adress
         self.phonenumber = phonenumber
+        cursor = CONNECTION.cursor()
+        try:
+            cursor.execute(self.SQL_CREATE)
+        except Exception:
+            pass
+
+
+    def save(self):
+        cursor = CONNECTION.cursor()
+        # Создать или обновить в базе
+        cursor.execute(self.SQL_INSERT.format(
+            self.fio,
+            self.dob,
+            self.gender,
+            self.adress,
+            self.phonenumber
+        ))
+        CONNECTION.commit()
+        # присвоить айди из базы
+        self.id = cursor.lastrowid
+    
+    def delete(self):
+        cursor = CONNECTION.cursor()
+        cursor.execute(self.SQL_DELETE.format(
+            self.id
+        ))
+
+    
+
+    @staticmethod
+    def select(condition):
+        cursor = CONNECTION.cursor()
+        cursor.execute(Reader.SQL_SELECT.format(condition))
+        result = []
+        for row in cursor.fetchall():
+            idx = row[0]
+            name = row[1]
+            dob = row[2]
+            gender = row[3]
+            adress = row[4]
+            phonenumber = row[5]
+            reader = Reader(name, dob, gender, adress, phonenumber)
+            reader.id = idx
+            result.append(reader)
+        return result
+
+
+
+
+
     
 class LibraryRecord():
     def __init__(self, idx, reader, book, date_issued, date_due):

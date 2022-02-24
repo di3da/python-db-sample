@@ -16,7 +16,8 @@ def register():
     print("Введите телефонный номер читателя:")
     phonenumber = input()
     a = models.Reader(fio, dob, gender, adress, phonenumber)
-    return a
+    a.save()
+    print("Читателю присвоен номер ", a.id)
 
 def addbook():
     print("Введите название книги:")
