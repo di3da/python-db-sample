@@ -172,6 +172,8 @@ class Reader():
         CONNECTION.commit()
         # присвоить айди из базы
         self.id = cursor.lastrowid
+        # присвоить библиотечную карточку
+        
     
     def delete(self):
         cursor = CONNECTION.cursor()
@@ -179,7 +181,6 @@ class Reader():
             self.id
         ))
 
-    
 
     @staticmethod
     def select(condition):
@@ -199,10 +200,6 @@ class Reader():
         return result
 
 
-
-
-
-    
 class LibraryRecord():
     def __init__(self, idx, reader, book, date_issued, date_due):
         self.id = idx

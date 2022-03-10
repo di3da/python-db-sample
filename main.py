@@ -37,15 +37,17 @@ def addbook():
         bookgenre, 
         bookstate)
     a.save()
-    print("Книге присвоен номер ", a.id)
+    print("Книге присвоен номер", a.id)
 
 def checkbook():
     print("Введите условие, чтобы вывести все книги, к которым оно применимо:")
     condition = input()
-    models.Book.select(condition)
+    a = models.Book.select(condition)
+    print(str(a))
 #здесь нужно обратиться к хранилищу по полученному номеру читателя 
-#    print(Book(bookname, bookgenre))
 
+
+    
 def debtcheck():
 #обращаемся ко всем книгам в хранилище
 #условием выводим в список fio, dob и adress каждого владельца книги, у которой истек срок
