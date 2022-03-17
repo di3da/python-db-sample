@@ -59,7 +59,6 @@ def checkrecord():
     print(models.LibraryRecord.select(condition))
     main()
 
-
 def takebook():
     print("Введите id читателя:")
     reader_id = int(input())
@@ -71,21 +70,22 @@ def takebook():
     date_due = input()
     a = models.LibraryRecord(reader_id, book_id, date_issued, date_due)
     a.save()
+    print("Номер карточки -", a.id)
+    main()
+
+def returnbook():
+    print("Введите номер возвращаемой книги:")
+    a = input()
+    models.LibraryRecord.SQL_DELETE.format(a)
+    print("Книга возвращена, запись удалена:")
     main()
     
-    
-
-
-
-    
 def debtcheck():
-#обращаемся ко всем книгам в хранилище
-#условием выводим в список fio, dob и adress каждого владельца книги, у которой истек срок
-    pass
-
+    print(models.LibraryRecord.debtcheck())
+    main()
 
 def main():
-    print("Введите команду (addbook, register, debtcheck, checkbook, checkreader, checkrecord, takebook):")
+    print("Введите команду (addbook, register, debtcheck, checkbook, checkreader, checkrecord, takebook, returnbook):")
     message = input()
     if message == "addbook":
         addbook()
@@ -101,9 +101,9 @@ def main():
         checkreader()
     elif message == "checkrecord":
         checkrecord()
+    elif message == "returnbook":
+        returnbook()
     else:
         main()
-
-
 if __name__ == '__main__':
     main()

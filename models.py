@@ -220,7 +220,7 @@ class LibraryRecord():
             reader_id TEXT NOT NULL,
             book_id TEXT NOT NULL,
             date_issued DATE NOT NULL,
-            date_due DATE NOT NULL,
+            date_due DATE NOT NULL
         );
     '''
 
@@ -229,7 +229,7 @@ class LibraryRecord():
             reader_id,
             book_id,
             date_issued,
-            date_due,
+            date_due
         )
         VALUES(
             "{}",
@@ -241,6 +241,14 @@ class LibraryRecord():
 
     SQL_SELECT = '''
         SELECT * from records WHERE {};
+    '''
+
+    SQL_DEBTCHECK = '''
+        SELECT * from records WHERE date_due < DATE('now');
+    '''
+
+    SQL_DELETE = '''
+        DELETE * from records WHERE book_id = {};
     '''
 
 
@@ -264,6 +272,8 @@ class LibraryRecord():
             self.date_issued,
             self.date_due
         ))
+        CONNECTION.commit()
+        self.id = cursor.lastrowid
 
 
 
@@ -275,6 +285,21 @@ class LibraryRecord():
     def select(condition):
         cursor = CONNECTION.cursor()
         cursor.execute(LibraryRecord.SQL_SELECT.format(condition))
+        result = []
+        for row in cursor.fetchall():
+            idx = row[0]
+            reader_id = row[1]
+            book_id = row[2]
+            date_issued = row[3]
+            date_due = row[4]
+            record = LibraryRecord(reader_id, book_id, date_issued, date_due)
+            record.id = idx
+            result.append(record)
+        return result
+
+    def debtcheck():
+        cursor = CONNECTION.cursor()
+        cursor.execute(LibraryRecord.SQL_DEBTCHECK)
         result = []
         for row in cursor.fetchall():
             idx = row[0]
