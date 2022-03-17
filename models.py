@@ -67,9 +67,9 @@ class Book():
             pass
     
 
- #   def __repr__(self):
- #       rep = 'Книга' + str(self.name)
-  #      return rep
+    def __repr__(self):
+        rep = '\nКнига ' + str(self.id) + '\nНазвание - ' + str(self.name) + '\nАвтор - ' + str(self.author) + '\nЖанр - ' + str(self.genre) + '\nДата печати - ' + str(self.publish_date)
+        return rep
 
     def __str__(self) -> str:
         pass
@@ -180,10 +180,11 @@ class Reader():
         # присвоить айди из базы
         self.id = cursor.lastrowid
         # присвоить библиотечную карточку
-        cursor.execute(LibraryRecord.SQL_INSERT.format(
-            self.id
 
-        ))
+    def __repr__(self):
+        rep = '\nЧитатель ' + str(self.id) + '\nФИО - ' + str(self.fio) + '\nДата рождения - ' + str(self.dob) + '\nПол - ' + str(self.gender) + '\nАдрес - ' + str(self.adress) + '\nНомер телефона - ' + str(self.phonenumber)
+        return rep
+        
         
     
     def delete(self):
@@ -234,23 +235,57 @@ class LibraryRecord():
             "{}",
             "{}",
             "{}",
-            "{}",
             "{}"
-        ) 
+        ); 
+    '''
+
+    SQL_SELECT = '''
+        SELECT * from records WHERE {};
     '''
 
 
-    def __init__(self, idx, reader, book, date_issued, date_due):
-        self.id = idx
-        self.reader_id = reader.id
-        self.book_id = book.id
+    def __init__(self, reader_id, book_id, date_issued, date_due):
+        cursor = CONNECTION.cursor()
+        self.id = None
+        self.reader_id = reader_id
+        self.book_id = book_id
         self.date_issued = date_issued
         self.date_due = date_due
-        cursor = CONNECTION.cursor()
         try:
             cursor.execute(self.SQL_CREATE)
         except Exception:
             pass
+
+    def save(self):
+        cursor = CONNECTION.cursor()
+        cursor.execute(self.SQL_INSERT.format(
+            self.reader_id,
+            self.book_id,
+            self.date_issued,
+            self.date_due
+        ))
+
+
+
+    def __repr__(self):
+        rep = '\nКарточка ' + str(self.id) + '\nЧитатель - ' + str(self.reader_id) + '\nКнига - ' + str(self.book_id) + '\nДата выдачи книги ' + str(self.date_issued) + '\nДата возврата книги - ' + str(self.date_due)
+        return rep
+
+    @staticmethod
+    def select(condition):
+        cursor = CONNECTION.cursor()
+        cursor.execute(LibraryRecord.SQL_SELECT.format(condition))
+        result = []
+        for row in cursor.fetchall():
+            idx = row[0]
+            reader_id = row[1]
+            book_id = row[2]
+            date_issued = row[3]
+            date_due = row[4]
+            record = LibraryRecord(reader_id, book_id, date_issued, date_due)
+            record.id = idx
+            result.append(record)
+        return result
 
 
 import sqlite3

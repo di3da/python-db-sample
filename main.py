@@ -18,6 +18,7 @@ def register():
     a = models.Reader(fio, dob, gender, adress, phonenumber)
     a.save()
     print("Читателю присвоен номер ", a.id)
+    main()
 
 def addbook():
     print("Введите название книги:")
@@ -38,15 +39,41 @@ def addbook():
         bookstate)
     a.save()
     print("Книге присвоен номер", a.id)
+    main()
 
 def checkbook():
     print("Введите условие, чтобы вывести все книги, к которым оно применимо:")
     condition = input()
     print(models.Book.select(condition))
+    main()
+
+def checkreader():
+    print("Введите 'id = x' читателя:")
+    condition = input()
+    print(models.Reader.select(condition))
+    main()
+
+def checkrecord():
+    print("Введите 'id = x' для доступа по номеру карточки:")
+    condition = input()
+    print(models.LibraryRecord.select(condition))
+    main()
 
 
-def takebook(reader, book):
-    reader = models.Reader.SQL_SELECT
+def takebook():
+    print("Введите id читателя:")
+    reader_id = int(input())
+    print("Введите id книги:")
+    book_id = int(input())
+    print("Введите сегодняшнюю дату:")
+    date_issued = input()
+    print("Введите дату, до которой необходимо вернуть книгу:")
+    date_due = input()
+    a = models.LibraryRecord(reader_id, book_id, date_issued, date_due)
+    a.save()
+    main()
+    
+    
 
 
 
@@ -58,7 +85,7 @@ def debtcheck():
 
 
 def main():
-    print("Введите команду (addbook, register, debtcheck, checkbook):")
+    print("Введите команду (addbook, register, debtcheck, checkbook, checkreader, checkrecord, takebook):")
     message = input()
     if message == "addbook":
         addbook()
@@ -68,6 +95,12 @@ def main():
         checkbook()
     elif message == "debtcheck":
         debtcheck()
+    elif message == "takebook":
+        takebook()
+    elif message == "checkreader":
+        checkreader()
+    elif message == "checkrecord":
+        checkrecord()
     else:
         main()
 
