@@ -42,9 +42,12 @@ def addbook():
 def checkbook():
     print("Введите условие, чтобы вывести все книги, к которым оно применимо:")
     condition = input()
-    a = models.Book.select(condition)
-    print(str(a))
-#здесь нужно обратиться к хранилищу по полученному номеру читателя 
+    print(models.Book.select(condition))
+
+
+def takebook(reader, book):
+    reader = models.Reader.SQL_SELECT
+
 
 
     

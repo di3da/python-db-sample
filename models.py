@@ -65,7 +65,14 @@ class Book():
             cursor.execute(self.SQL_CREATE)
         except Exception:
             pass
+    
 
+ #   def __repr__(self):
+ #       rep = 'Книга' + str(self.name)
+  #      return rep
+
+    def __str__(self) -> str:
+        pass
         
 
     def save(self):
@@ -105,9 +112,9 @@ class Book():
             book = Book(name, author, pubdate, genre, state)
             book.id = idx
             result.append(book)
-
         return result
         # получить по условию
+
     
 class Reader():
     SQL_CREATE = '''
@@ -173,6 +180,10 @@ class Reader():
         # присвоить айди из базы
         self.id = cursor.lastrowid
         # присвоить библиотечную карточку
+        cursor.execute(LibraryRecord.SQL_INSERT.format(
+            self.id
+
+        ))
         
     
     def delete(self):
@@ -201,12 +212,45 @@ class Reader():
 
 
 class LibraryRecord():
+
+    SQL_CREATE = '''
+        CREATE TABLE records (
+            id INTEGER PRIMARY KEY,
+            reader_id TEXT NOT NULL,
+            book_id TEXT NOT NULL,
+            date_issued DATE NOT NULL,
+            date_due DATE NOT NULL,
+        );
+    '''
+
+    SQL_INSERT = ''' 
+        INSERT INTO records (
+            reader_id,
+            book_id,
+            date_issued,
+            date_due,
+        )
+        VALUES(
+            "{}",
+            "{}",
+            "{}",
+            "{}",
+            "{}"
+        ) 
+    '''
+
+
     def __init__(self, idx, reader, book, date_issued, date_due):
         self.id = idx
         self.reader_id = reader.id
         self.book_id = book.id
         self.date_issued = date_issued
         self.date_due = date_due
+        cursor = CONNECTION.cursor()
+        try:
+            cursor.execute(self.SQL_CREATE)
+        except Exception:
+            pass
 
 
 import sqlite3
