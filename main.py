@@ -7,7 +7,7 @@ models.CONNECTION = sqlite3.connect('library.db')
 def register():
     print("Введите ФИО читателя без сокращений:")
     fio = input()
-    print("Введите дату рождения читателя в формате dd.mm.yyyy:")
+    print("Введите дату рождения читателя в формате yyyy-mm-dd:")
     dob = input()
     print("Введите пол читателя:")
     gender = input()
@@ -88,7 +88,7 @@ def delbook():
     print("Введите 'id = x' книги:")
     condition = input()
     models.Book.SQL_DELETE.format(condition)
-    
+    #не удаляется
     main()
 
 def main():
