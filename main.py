@@ -84,6 +84,13 @@ def debtcheck():
     print(models.LibraryRecord.debtcheck())
     main()
 
+def delbook():
+    print("Введите 'id = x' книги:")
+    condition = input()
+    models.Book.SQL_DELETE.format(condition)
+    
+    main()
+
 def main():
     print("Введите команду (addbook, register, debtcheck, checkbook, checkreader, checkrecord, takebook, returnbook):")
     message = input()
@@ -103,6 +110,10 @@ def main():
         checkrecord()
     elif message == "returnbook":
         returnbook()
+    elif message == "delbook":
+        delbook()
+    elif message == "exit":
+        exit()
     else:
         main()
 if __name__ == '__main__':

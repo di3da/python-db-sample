@@ -68,7 +68,7 @@ class Book():
     
 
     def __repr__(self):
-        rep = '\nКнига ' + str(self.id) + '\nНазвание - ' + str(self.name) + '\nАвтор - ' + str(self.author) + '\nЖанр - ' + str(self.genre) + '\nДата печати - ' + str(self.publish_date)
+        rep = '\nКнига ' + str(self.id) + '\nНазвание - ' + str(self.name) + '\nАвтор - ' + str(self.author) + '\nЖанр - ' + str(self.genre) + '\nДата печати - ' + str(self.publish_date) + '\nСостояниe - ' + str(self.state)
         return rep
 
     def __str__(self) -> str:
@@ -89,11 +89,11 @@ class Book():
         # присвоить айди из базы
         self.id = cursor.lastrowid
 
-    def delete(self):
+    @staticmethod
+    def delete(condition):
         cursor = CONNECTION.cursor()
-        cursor.execute(self.SQL_DELETE.format(
-            self.id
-        ))
+        cursor.execute(Book.SQL_DELETE.format(condition))
+        CONNECTION.commit()
 
 
     @staticmethod
