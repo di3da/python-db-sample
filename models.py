@@ -40,8 +40,11 @@ class Book():
         DELETE * from books WHERE {};
     '''
 
-    SQL_SELECT = '''
-        SELECT * from books WHERE {};
+    SQL_SELECTBYID = '''
+        SELECT * from books WHERE id = {};
+    '''
+    SQL_SELECTBYNAME = '''
+        SELECT * from books WHERE name = {};
     '''
 
     def __init__(self, 
@@ -68,7 +71,7 @@ class Book():
     
 
     def __repr__(self):
-        rep = '\nКнига ' + str(self.id) + '\nНазвание - ' + str(self.name) + '\nАвтор - ' + str(self.author) + '\nЖанр - ' + str(self.genre) + '\nДата печати - ' + str(self.publish_date) + '\nСостояниe - ' + str(self.state)
+        rep =  '\nКнига ' + str(self.id) + '\nНазвание - ' + str(self.name) + '\nАвтор - ' + str(self.author) + '\nЖанр - ' + str(self.genre) + '\nДата печати - ' + str(self.publish_date) + '\nСостояниe - ' + str(self.state) + '\n______________ ' 
         return rep
 
     def __str__(self) -> str:
@@ -97,9 +100,29 @@ class Book():
 
 
     @staticmethod
-    def select(condition):
+    def selectbyid(condition):
         cursor = CONNECTION.cursor()
-        cursor.execute(Book.SQL_SELECT.format(condition))
+        cursor.execute(Book.SQL_SELECTBYID.format(condition))
+
+        result = []
+        for row in cursor.fetchall():
+            idx = row[0]
+            name = row[1]
+            author = row[2]
+            pubdate = row[3]
+            genre = row[4]
+            state = row[5]
+            book = Book(name, author, pubdate, genre, state)
+            book.id = idx
+            result.append(book)
+            
+        return result
+        # получить по условию
+    
+    @staticmethod
+    def selectbyname(condition):
+        cursor = CONNECTION.cursor()
+        cursor.execute(Book.SQL_SELECTBYNAME.format(condition))
 
         result = []
         for row in cursor.fetchall():
@@ -145,9 +168,13 @@ class Reader():
         ) 
     '''
 
-    SQL_SELECT = '''
-        SELECT * from readers WHERE {};
+    SQL_SELECTBYID = '''
+        SELECT * from readers WHERE id = {};
     '''
+    SQL_SELECTBYNAME = '''
+        SELECT * from readers WHERE name = {};
+    '''
+
     SQL_DELETE = '''
         DELETE * from readers WHERE {};
     '''
@@ -182,7 +209,7 @@ class Reader():
         # присвоить библиотечную карточку
 
     def __repr__(self):
-        rep = '\nЧитатель ' + str(self.id) + '\nФИО - ' + str(self.fio) + '\nДата рождения - ' + str(self.dob) + '\nПол - ' + str(self.gender) + '\nАдрес - ' + str(self.adress) + '\nНомер телефона - ' + str(self.phonenumber)
+        rep = '\n______________ ' + '\nЧитатель ' + str(self.id) + '\nФИО - ' + str(self.fio) + '\nДата рождения - ' + str(self.dob) + '\nПол - ' + str(self.gender) + '\nАдрес - ' + str(self.adress) + '\nНомер телефона - ' + str(self.phonenumber)
         return rep
         
         
@@ -195,9 +222,26 @@ class Reader():
 
 
     @staticmethod
-    def select(condition):
+    def selectbyid(condition):
         cursor = CONNECTION.cursor()
-        cursor.execute(Reader.SQL_SELECT.format(condition))
+        cursor.execute(Reader.SQL_SELECTBYID.format(condition))
+        result = []
+        for row in cursor.fetchall():
+            idx = row[0]
+            name = row[1]
+            dob = row[2]
+            gender = row[3]
+            adress = row[4]
+            phonenumber = row[5]
+            reader = Reader(name, dob, gender, adress, phonenumber)
+            reader.id = idx
+            result.append(reader)
+        return result
+
+    @staticmethod
+    def selectbyname(condition):
+        cursor = CONNECTION.cursor()
+        cursor.execute(Reader.SQL_SELECTBYNAME.format(condition))
         result = []
         for row in cursor.fetchall():
             idx = row[0]
@@ -239,8 +283,14 @@ class LibraryRecord():
         ); 
     '''
 
-    SQL_SELECT = '''
-        SELECT * from records WHERE {};
+    SQL_SELECTBYREADER = '''
+        SELECT * from records WHERE reader_id = {};
+    '''
+    SQL_SELECTBYBOOK = '''
+        SELECT * from records WHERE book_id = {};
+    '''
+    SQL_SELECTBYRECORD = '''
+        SELECT * from records WHERE id = {};
     '''
 
     SQL_DEBTCHECK = '''
@@ -278,13 +328,13 @@ class LibraryRecord():
 
 
     def __repr__(self):
-        rep = '\nКарточка ' + str(self.id) + '\nЧитатель - ' + str(self.reader_id) + '\nКнига - ' + str(self.book_id) + '\nДата выдачи книги ' + str(self.date_issued) + '\nДата возврата книги - ' + str(self.date_due)
+        rep =  '\nКарточка ' + str(self.id) + '\nЧитатель - ' + str(self.reader_id) + '\nКнига - ' + str(self.book_id) + '\nДата выдачи книги ' + str(self.date_issued) + '\nДата возврата книги - ' + str(self.date_due) + '\n______________ ' 
         return rep
 
     @staticmethod
-    def select(condition):
+    def selectbyreader(condition):
         cursor = CONNECTION.cursor()
-        cursor.execute(LibraryRecord.SQL_SELECT.format(condition))
+        cursor.execute(LibraryRecord.SQL_SELECTBYREADER.format(condition))
         result = []
         for row in cursor.fetchall():
             idx = row[0]
@@ -297,9 +347,10 @@ class LibraryRecord():
             result.append(record)
         return result
 
-    def debtcheck():
+    @staticmethod
+    def selectbybook(condition):
         cursor = CONNECTION.cursor()
-        cursor.execute(LibraryRecord.SQL_DEBTCHECK)
+        cursor.execute(LibraryRecord.SQL_SELECTBYBOOK.format(condition))
         result = []
         for row in cursor.fetchall():
             idx = row[0]
@@ -308,6 +359,75 @@ class LibraryRecord():
             date_issued = row[3]
             date_due = row[4]
             record = LibraryRecord(reader_id, book_id, date_issued, date_due)
+            cursor.execute(Reader.SQL_SELECTBYID.format(reader_id))
+            for roww in cursor.fetchall():
+                idx = roww[0]
+                name = roww[1]
+                dob = roww[2]
+                gender = roww[3]
+                adress = roww[4]
+                phonenumber = roww[5]
+                reader = Reader(name, dob, gender, adress, phonenumber)
+                reader.id = idx
+                result.append(reader)
+            record.id = idx
+            result.append(record)
+        return result
+
+    @staticmethod
+    def selectbyrecord(condition):
+        cursor = CONNECTION.cursor()
+        
+        cursor.execute(LibraryRecord.SQL_SELECTBYRECORD.format(condition))
+        result = []
+    
+        for row in cursor.fetchall():
+            
+            idx = row[0]
+            reader_id = row[1]
+            book_id = row[2]
+            date_issued = row[3]
+            date_due = row[4]
+            record = LibraryRecord(reader_id, book_id, date_issued, date_due)
+            cursor.execute(Reader.SQL_SELECTBYID.format(reader_id))
+            for roww in cursor.fetchall():
+                idx = roww[0]
+                name = roww[1]
+                dob = roww[2]
+                gender = roww[3]
+                adress = roww[4]
+                phonenumber = roww[5]
+                reader = Reader(name, dob, gender, adress, phonenumber)
+                reader.id = idx
+                result.append(reader)
+            record.id = idx
+            result.append(record)
+        
+        return result
+
+    def debtcheck():
+        cursor = CONNECTION.cursor()
+        cursor.execute(LibraryRecord.SQL_DEBTCHECK)
+        result = []
+        for row in cursor.fetchall():
+            
+            idx = row[0]
+            reader_id = row[1]
+            book_id = row[2]
+            date_issued = row[3]
+            date_due = row[4]
+            record = LibraryRecord(reader_id, book_id, date_issued, date_due)
+            cursor.execute(Reader.SQL_SELECTBYID.format(reader_id))
+            for roww in cursor.fetchall():
+                idx = roww[0]
+                name = roww[1]
+                dob = roww[2]
+                gender = roww[3]
+                adress = roww[4]
+                phonenumber = roww[5]
+                reader = Reader(name, dob, gender, adress, phonenumber)
+                reader.id = idx
+                result.append(reader)
             record.id = idx
             result.append(record)
         return result

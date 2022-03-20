@@ -42,21 +42,53 @@ def addbook():
     main()
 
 def checkbook():
-    print("Введите условие, чтобы вывести все книги, к которым оно применимо:")
-    condition = input()
-    print(models.Book.select(condition))
-    main()
+    print("Выберите условие, по которому нужно найти книгу (name, id):")
+    if input() == "id":
+        print("Введите номер книги:")
+        id = input()
+        print(models.Book.selectbyid(id))
+        main()
+    elif input() == "name":
+        print("Введите название книги:")
+        name = input()
+        print(models.Book.selectbyname(name))
+        main()
+    else:
+        print("Найти книгу можно только по имени или номеру:")
+        main()
 
 def checkreader():
-    print("Введите 'id = x' читателя:")
-    condition = input()
-    print(models.Reader.select(condition))
+    print("Введите условие, по которому нужно найти читателя(name, id):")
+    if input() == "id":
+        print("Введите номер читателя:")
+        id = input()
+        print(models.Reader.selectbyid(id))
+        main()
+    elif input() == "name":
+        print("Введите полное ФИО читателя без сокращений:")
+        name = input()
+        print(models.Book.selectbyname(name))
+        main()
+    else:
+        print("Найти читателя можно только по имени или номеру:")
+        main()
     main()
 
 def checkrecord():
-    print("Введите 'id = x' для доступа по номеру карточки:")
-    condition = input()
-    print(models.LibraryRecord.select(condition))
+    print("Введите условие, по которому нужно найти карточку(reader, book, id):")
+    if input() == "id":
+        print("Введите номер карточки:")
+        id = input()
+        print(models.LibraryRecord.selectbyrecord(id))
+        main()
+    if input() == "reader":
+        print("Введите номер читателя:")
+        reader_id = input()
+        print(models.LibraryRecord.selectbyreader(reader_id))
+    if input() == "book":
+        print("Введите полное ФИО читателя без сокращений:")
+        book = input()
+        print(models.LibraryRecord.selectbybook(book))
     main()
 
 def takebook():
