@@ -124,7 +124,7 @@ def delbook():
     main()
 
 def main():
-    print("Введите команду (addbook, register, debtcheck, checkbook, checkreader, checkrecord, takebook, returnbook):")
+    print("Введите команду (addbook, register, debtcheck, checkbook, checkreader, checkrecord, takebook, returnbook, exit):")
     message = input()
     if message == "addbook":
         addbook()
