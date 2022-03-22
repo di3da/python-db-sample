@@ -442,25 +442,3 @@ create_dicks_command = '''
         size INTEGER NOT NULL
     );
 '''
-
-# class Person:
-#     def __init__(self, name, size) -> None:
-#         self.id = None
-#         self.name = name
-#         self.size = size
-
-# connection = sqlite3.connect('library.db')
-# cursor = connection.cursor()
-
-# cursor.execute("SELECT * from dicks WHERE id = 1;")
-# for row in cursor.fetchall():
-#     print(row)
-
-# Book.select()
-
-# cursor.execute(create_dicks_command)
-# cursor.execute('INSERT INTO dicks(name, size) VALUES ("Artem", 100);')
-# cursor.execute('INSERT INTO dicks(name, size) VALUES ("Nikita", 50);')
-# cursor.execute('UPDATE dicks SET size = 150 WHERE id IN (1,2,3,4)')
-# cursor.execute('DELETE FROM dicks WHERE id = 2')
-# connection.commit()
